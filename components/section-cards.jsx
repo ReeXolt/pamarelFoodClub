@@ -148,7 +148,7 @@ const WalletCard = () => {
           <div>
             <span className="font-medium text-gray-700">Available Balance:</span>{" "}
             {/* balance.available_balance +  */}
-            {formatCurrency(40202)}
+            {formatCurrency(30202)}
           </div>
         </div>
       </CardFooter>
