@@ -97,7 +97,7 @@ const WalletCard = () => {
             <div className="flex-1">
         <CardDescription>Wallet Balance ({balance.currency})</CardDescription>
         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-          {formatCurrency(balance.available_balance + 40000)}
+          {formatCurrency(30202)}
         </CardTitle>
             </div>
             {isAdmin && (
