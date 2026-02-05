@@ -97,8 +97,7 @@ const WalletCard = () => {
             <div className="flex-1">
         <CardDescription>Wallet Balance ({balance.currency})</CardDescription>
         <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-        {/* balance.available_balance +  */}
-          {formatCurrency(30202)}
+          {formatCurrency(balance.available_balance)}
         </CardTitle>
             </div>
             {isAdmin && (
@@ -142,14 +141,14 @@ const WalletCard = () => {
 
         {/* 💰 Show Ledger and Available Balances */}
         <div className="text-xs text-gray-500 mt-2">
-          {/* <div>
+          <div>
             <span className="font-medium text-gray-700">Ledger Balance:</span>{" "}
             {formatCurrency(balance.ledger_balance)}
-          </div> */}
+          </div>
           <div>
             <span className="font-medium text-gray-700">Available Balance:</span>{" "}
-            {/* balance.available_balance +  */}
-            {formatCurrency(30202)}
+             
+            {formatCurrency(balance.available_balance)}
           </div>
         </div>
       </CardFooter>
