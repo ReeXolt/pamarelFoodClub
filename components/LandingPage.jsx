@@ -13,7 +13,7 @@ export default function FoodSuppliesLanding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-white">
+    <div className="min-h-screen bg-linear-to-b from-yellow-50 to-white">
       {/* Header */}
       <header className="bg-yellow-500 text-white py-6 px-4 shadow-lg">
         <div className="container mx-auto flex justify-between items-center">

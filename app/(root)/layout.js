@@ -1,5 +1,5 @@
 import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header';
+import { Navbar } from '@/components/layout/Navbar';
 import { Toaster } from '@/components/ui/sonner';
 
 
@@ -10,7 +10,7 @@ export default function HomeLayout({ children }) {
     return (
         <>
             <div className="relative flex min-h-screen flex-col">
-              <Header />
+              <Navbar />
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
