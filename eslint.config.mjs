@@ -9,6 +9,23 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [...compat.extends("next/core-web-vitals")];
+export default [
+  ...compat.extends("next/core-web-vitals"),
 
-export default eslintConfig;
+  {
+    rules: {
+      // 🔴 CRITICAL: catch undefined variables
+      "no-undef": "error",
+
+      // warn unused stuff
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+
+      // better dev hygiene
+      "no-console": "warn",
+
+      // React hooks safety
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+    },
+  },
+];
