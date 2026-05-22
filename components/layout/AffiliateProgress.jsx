@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { PLANS } from "@/lib/plans";
+import { plans } from "@/lib/plans";
 
 const ReferralLink = ({ code }) => {
   const [copied, setCopied] = useState(false);
@@ -26,7 +26,7 @@ const ReferralLink = ({ code }) => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
+    <div className="bg-linear-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
       <h3 className="font-medium mb-2">Your Referral Link</h3>
       <div className="flex items-center gap-2">
         <input
@@ -59,7 +59,7 @@ const BoardCard = ({ board, data, isCurrent, isClaiming, onClaim, planColor, cur
 
   // Get the correct plan's board rewards
   const getPlanRewards = (boardType) => {
-    const plan = PLANS[currentPlan?.toLowerCase()] || PLANS.basic;
+    const plan = plans[currentPlan?.toLowerCase()] || plans.basic;
     const boardData = plan.boards.find(b => 
       b.name.toLowerCase().includes(boardType)
     );
@@ -220,7 +220,7 @@ export const AffiliateProgress = () => {
 
   const handleClaimClick = (boardType) => {
     // 1. Get rewards for this board
-    const plan = PLANS[affiliateData.currentPlan?.toLowerCase().split(' ')[0]] || PLANS.basic;
+    const plan = plans[affiliateData.currentPlan?.toLowerCase().split(' ')[0]] || plans.basic;
     const boardData = plan.boards.find(b => b.name.toLowerCase().includes(boardType));
     const earnings = boardData?.earnings || [];
 

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { PLANS } from '@/lib/plans';
+import { plans } from '@/lib/plans';
 import ClaimRewardModal from '../ClaimRewardModal';
 
 export default function BoardProgress({ userData, checkBoardProgress }) {
@@ -10,7 +10,7 @@ export default function BoardProgress({ userData, checkBoardProgress }) {
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
 
-  const planBoards = PLANS[userData.currentPlan || userData.plan]?.boards || [];
+  const planBoards = plans[userData.currentPlan || userData.plan]?.boards || [];
   
   // Debug: Log the user data to see what's happening
   useEffect(() => {

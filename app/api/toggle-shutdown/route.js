@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { toggleSite } from "@/lib/siteState";
 
-let siteDown = false;
+export async function GET() {
+  const siteDown = toggleSite();
 
-export function GET() {
-  siteDown = !siteDown;
-  return NextResponse.json({ siteDown });
-}
-
-// Expose state for middleware to check
-export function isSiteDown() {
-  return siteDown;
+  return NextResponse.json({
+    siteDown,
+  });
 }
