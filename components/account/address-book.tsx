@@ -10,7 +10,6 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from '@/components/ui/dialog';
 import { AddressForm } from './address-form';
 import { useToast } from '@/hooks/use-toast';
