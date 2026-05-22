@@ -1,7 +1,7 @@
 import connectToDatabase from '@/lib/dbConnect';
 import BoardCompletion from '@/models/BoardCompletion';
 import { NextResponse } from 'next/server';
-import { PLANS } from '@/lib/plans';
+import { PLANS, plans } from '@/lib/plans';
 import User from '@/models/user';
 
 export async function POST(req) {
@@ -31,7 +31,9 @@ export async function POST(req) {
 
 async function checkBoardCompletion(userId, boardType) {
   const user = await User.findById(userId).populate('referredBy');
-  const plan = PLANS[user.currentPlan || user.plan];
+  const plan = plans.find(
+  (plan) => plan.id === (user.currentPlan || user.plan)
+);
   const boardData = plan.boards.find(b => b.name.toLowerCase().includes(boardType));
 
   let isCompleted = false;

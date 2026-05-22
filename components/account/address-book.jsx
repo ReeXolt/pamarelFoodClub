@@ -2,7 +2,6 @@
 "use client"
 
 import * as React from "react"
-import { addresses as initialAddresses } from "@/lib/mock-data"
 import { AddressCard } from "./address-card"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
@@ -78,7 +77,7 @@ export function AddressBook() {
           </div>
         )}
       </div>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>{addressToEdit ? "Edit Address" : "Add New Address"}</DialogTitle>
           <DialogDescription>

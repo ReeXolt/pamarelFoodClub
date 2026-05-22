@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/dbConnect";
 import User from "@/models/user";
 
-import { PLANS } from "../../../../../lib/plans";
+import { plans } from "../../../../../lib/plans";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/options";
 
@@ -11,7 +11,7 @@ export async function POST(request) {
     await connectToDatabase();
     const { boardType } = await request.json();
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Unauthorized" },
@@ -36,8 +36,10 @@ export async function POST(request) {
       );
     }
 
-    // Get rewards from PLANS configuration
-    const plan = PLANS[user.currentPlan];
+    // Get rewards from plans configuration
+    const plan = plans.find(
+      (plan) => plan.id === (user.currentPlan)
+    );
     if (!plan) {
       return NextResponse.json(
         { error: "Invalid plan configuration" },
@@ -45,7 +47,7 @@ export async function POST(request) {
       );
     }
 
-    const boardConfig = plan.boards.find(b => 
+    const boardConfig = plan.boards.find(b =>
       b.name.toLowerCase().includes(boardType)
     );
 
@@ -62,7 +64,7 @@ export async function POST(request) {
 
       if (earning.includes('Food Wallet') || earning.includes('FOODY BAG')) {
         user.wallets.food += amount;
-      } 
+      }
       else if (earning.includes('Gadgets Wallet')) {
         user.wallets.gadget += amount;
       }
@@ -77,11 +79,11 @@ export async function POST(request) {
     // If not the last board, move to next board
     const boardsOrder = ['bronze', 'silver', 'gold', 'platinum'];
     const currentIndex = boardsOrder.indexOf(boardType);
-    
+
     if (currentIndex < boardsOrder.length - 1) {
       const nextBoard = boardsOrder[currentIndex + 1];
       user.currentBoard = nextBoard;
-      
+
       // Initialize next board if not exists
       if (!user.boardProgress.some(b => b.boardType === nextBoard)) {
         user.boardProgress.push({
