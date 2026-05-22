@@ -26,7 +26,7 @@ const ReferralLink = ({ code }) => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
+    <div className="bg-linear-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
       <h3 className="font-medium mb-2">Your Referral Link</h3>
       <div className="flex items-center gap-2">
         <input

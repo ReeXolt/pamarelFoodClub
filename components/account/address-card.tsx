@@ -57,7 +57,7 @@ export function AddressCard({
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</CardHeader>
-			<CardContent className="flex-grow text-sm text-muted-foreground">
+			<CardContent className="grow text-sm text-muted-foreground">
 				<p>{address.address}</p>
 				<p>
 					{address.city}, {address.state} {address.zip}
