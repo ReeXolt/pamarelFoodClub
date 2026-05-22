@@ -1,11 +1,10 @@
-// lib/siteState.ts
 let siteDown = false;
 
-export function toggleSite() {
+export const toggleSite = (): boolean => {
   siteDown = !siteDown;
   return siteDown;
-}
+};
 
-export function getSiteState() {
+export const getSiteState = (): boolean => {
   return siteDown;
-}
+};
