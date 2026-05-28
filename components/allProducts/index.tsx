@@ -120,7 +120,7 @@ export const AllProducts = () => {
 		setShowFeaturedOnly(false);
 		setSortBy('popular');
 		setCurrentPage(1);
-		router.push('/category');
+		router.push(routes.shop.category);
 	};
 
 	// Fetch categories (for future use in filtering)
