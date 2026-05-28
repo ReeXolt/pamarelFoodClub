@@ -2,9 +2,10 @@
 import { useInView, motion } from "framer-motion";
 import { useRef } from "react";
 import stockistWoman from "@/public/assets/stockist-woman.jpg";
-import { revealLeft, revealRight, routes } from "@/lib/utils";
+import { revealLeft, revealRight } from "@/lib/utils";
 import { ArrowRight, Briefcase } from "lucide-react";
 import Image from "next/image";
+import { routes } from "@/utils/routes";
 
 export const BusinessOpportunities = () => {
   const ref = useRef(null);

@@ -1,12 +1,13 @@
 'use client';
 import { useInView, motion } from 'framer-motion';
 import { useRef } from 'react';
-import { revealUp, revealScale, routes } from '@/lib/utils';
+import { revealUp, revealScale } from '@/lib/utils';
 import { Clock, ArrowRight } from 'lucide-react';
 import heroBg from '@/public/assets/hero-bg.jpg';
 import foodMarket from '@/public/assets/food-market.jpg';
 import gadgetHub from '@/public/assets/gadget-hub.jpg';
 import Image from 'next/image';
+import { routes } from '@/utils/routes';
 
 export const DealsSection = () => {
 	const ref = useRef(null);
@@ -55,7 +56,7 @@ export const DealsSection = () => {
 						</h2>
 					</div>
 					<a
-						href={routes.shop.market}
+						href={routes.shop.index}
 						className="text-primary text-sm font-medium inline-flex items-center gap-1.5 hover:gap-2.5 transition-all"
 					>
 						View All Deals <ArrowRight size={14} />

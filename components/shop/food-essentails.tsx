@@ -1,0 +1,404 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Product } from '../allProducts/data';
+import { formatPrice } from '@/lib/utils';
+
+type TimeLeft = {
+	days?: number;
+	hours?: number;
+	minutes?: number;
+	seconds?: number;
+	expired: boolean;
+};
+
+export default function FoodEssentails() {
+	const [products, setProducts] = useState<Product[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [currentTime, setCurrentTime] = useState<Date>(new Date());
+
+	useEffect(() => {
+		fetchFoodEssentials();
+
+		const timer = setInterval(() => {
+			setCurrentTime(new Date());
+		}, 1000);
+
+		return () => clearInterval(timer);
+	}, []);
+
+	const fetchFoodEssentials = async (): Promise<void> => {
+		try {
+			const response = await fetch('/api/products/food-essentials');
+			const data = await response.json();
+
+			if (data.success) {
+				setProducts(data.products);
+			}
+		} catch (error) {
+			console.error('Error fetching food essentials:', error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const calculateTimeLeft = (endDate?: string | Date): TimeLeft => {
+		if (!endDate) {
+			return { expired: true };
+		}
+
+		const end = new Date(endDate);
+		const difference = end.getTime() - currentTime.getTime();
+
+		if (difference <= 0) {
+			return { expired: true };
+		}
+
+		return {
+			days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+			hours: Math.floor(
+				(difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+			),
+			minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+			seconds: Math.floor((difference % (1000 * 60)) / 1000),
+			expired: false,
+		};
+	};
+
+	const calculateDiscountedPrice = (product: Product): number => {
+		if (
+			product.flashSale?.discountPercentage &&
+			product.flashSale.discountPercentage > 0
+		) {
+			const discount =
+				product.price * (product.flashSale.discountPercentage / 100);
+
+			return product.price - discount;
+		}
+
+		return product.sellingPrice ?? product.price;
+	};
+
+	const formatTimeUnit = (value?: number): string => {
+		if (typeof value !== 'number') return '00';
+
+		return value < 10 ? `0${value}` : `${value}`;
+	};
+
+	const isFlashSaleActive = (product: Product): boolean => {
+		if (
+			!product.flashSale?.active ||
+			!product.flashSale?.startDate ||
+			!product.flashSale?.endDate
+		) {
+			return false;
+		}
+
+		const now = new Date();
+		const startDate = new Date(product.flashSale.startDate);
+		const endDate = new Date(product.flashSale.endDate);
+
+		return now >= startDate && now <= endDate;
+	};
+
+	const CountdownTimer = ({ endDate }: { endDate?: string | Date }) => {
+		const timeLeft = calculateTimeLeft(endDate);
+
+		if (timeLeft.expired) {
+			return (
+				<div className="bg-red-500 text-white px-3 py-1 rounded text-sm font-bold">
+					Expired
+				</div>
+			);
+		}
+
+		return (
+			<div className="flex items-center space-x-2 bg-green-500 text-white px-3 py-2 rounded-lg">
+				<div className="text-center">
+					<div className="text-xs font-semibold">HRS</div>
+					<div className="text-lg font-bold">
+						{formatTimeUnit(timeLeft.hours)}
+					</div>
+				</div>
+
+				<div className="text-green-300 font-bold">:</div>
+
+				<div className="text-center">
+					<div className="text-xs font-semibold">MINS</div>
+					<div className="text-lg font-bold">
+						{formatTimeUnit(timeLeft.minutes)}
+					</div>
+				</div>
+
+				<div className="text-green-300 font-bold">:</div>
+
+				<div className="text-center">
+					<div className="text-xs font-semibold">SECS</div>
+					<div className="text-lg font-bold">
+						{formatTimeUnit(timeLeft.seconds)}
+					</div>
+				</div>
+			</div>
+		);
+	};
+
+	if (!loading && products.length === 0) {
+		return null;
+	}
+
+	if (loading) {
+		return (
+			<div id="food" className="py-16 bg-white">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div className="text-center mb-12">
+						<div className="w-20 h-1 bg-yellow-500 mx-auto mb-4"></div>
+
+						<h2 className="text-4xl font-bold text-gray-900">
+							Food Essentials
+						</h2>
+
+						<p className="text-gray-600 mt-4">Fresh picks for every meal</p>
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+						{[...Array(4)].map((_, index) => (
+							<div key={index} className="animate-pulse">
+								<div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
+
+								<div className="bg-gray-200 h-4 rounded mb-2"></div>
+
+								<div className="bg-gray-200 h-4 rounded w-3/4 mb-2"></div>
+
+								<div className="bg-gray-200 h-6 rounded w-1/2"></div>
+							</div>
+						))}
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+  // console.log(products)
+
+	return (
+		<div
+			id="food"
+			className="py-16 bg-gradient-to-br from-green-50 to-yellow-50"
+		>
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-12">
+					<div className="text-center lg:text-left mb-6 lg:mb-0">
+						<div className="flex items-center justify-center lg:justify-start space-x-3 mb-2">
+							<div className="w-5 h-10 bg-green-500 rounded"></div>
+
+							<h2 className="text-2xl font-bold text-green-600">Fresh</h2>
+						</div>
+
+						<h1 className="text-4xl font-bold text-gray-900">
+							Food Essentials
+						</h1>
+
+						<p className="text-gray-600 mt-2 text-lg">
+							Fresh picks for every meal
+						</p>
+					</div>
+
+					{products.some((product) => isFlashSaleActive(product)) && (
+						<div className="flex items-center justify-center lg:justify-end space-x-4">
+							<div className="text-gray-600 font-semibold">
+								Flash Sale Ending:
+							</div>
+
+							<CountdownTimer
+								endDate={
+									products.find((p) => isFlashSaleActive(p))?.flashSale?.endDate
+								}
+							/>
+						</div>
+					)}
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+					{products.map((product) => {
+						const flashSaleActive = isFlashSaleActive(product);
+
+						const discountedPrice = calculateDiscountedPrice(product);
+
+						const timeLeft = flashSaleActive
+							? calculateTimeLeft(product.flashSale?.endDate)
+							: { expired: true };
+
+						const savings = product.price - discountedPrice;
+
+						return (
+							<div key={product._id} className="group">
+								<Link href={`/product/${product._id}`}>
+									<div className="bg-white rounded-xl shadow-lg overflow-hidden group-hover:shadow-xl transition-all duration-300 border-2 border-green-100">
+										<div className="relative h-64 bg-gray-100">
+											{product.images?.length > 0 ? (
+												<Image
+													src={product.images[0] as string}
+													alt={product.name}
+													fill
+													className="object-cover group-hover:scale-110 transition-transform duration-500"
+													sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+												/>
+											) : (
+												<div className="w-full h-full bg-gray-200 flex items-center justify-center">
+													<span className="text-gray-400">No Image</span>
+												</div>
+											)}
+
+											{flashSaleActive && (
+												<div className="absolute top-3 left-3">
+													<div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+														⚡ {product.flashSale?.discountPercentage}% OFF
+													</div>
+												</div>
+											)}
+
+											<div className="absolute top-3 right-3">
+												<div className="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
+													FOOD
+												</div>
+											</div>
+
+											{product.createdAt &&
+												new Date(product.createdAt) >
+													new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) && (
+													<div className="absolute bottom-3 left-3">
+														<div className="bg-blue-500 text-white px-2 py-1 rounded text-xs font-bold">
+															FRESH
+														</div>
+													</div>
+												)}
+
+											{flashSaleActive && !timeLeft.expired && (
+												<div className="absolute bottom-3 left-3 right-3">
+													<div className="bg-black/75 text-white px-3 py-2 rounded-lg">
+														<div className="flex justify-between text-xs">
+															<span>Ends in:</span>
+
+															<span className="font-bold">
+																{formatTimeUnit(timeLeft.hours)}:
+																{formatTimeUnit(timeLeft.minutes)}:
+																{formatTimeUnit(timeLeft.seconds)}
+															</span>
+														</div>
+													</div>
+												</div>
+											)}
+
+											<div className="absolute bottom-0 left-0 right-0 bg-gray-200 h-1">
+												<div
+													className="bg-green-500 h-1 transition-all duration-500"
+													style={{
+														width: `${Math.min(
+															((product.numberSold ?? 0) /
+																((product.stock ?? 0) +
+																	(product.numberSold ?? 0))) *
+																100,
+															100,
+														)}%`,
+													}}
+												></div>
+											</div>
+										</div>
+
+										<div className="p-6">
+											<h3 className="font-semibold text-lg mb-3 text-gray-900 group-hover:text-green-600 transition-colors line-clamp-2">
+												{product.name}
+											</h3>
+
+											<div className="flex items-center justify-between mb-3">
+												<div className="flex items-center space-x-2">
+													{flashSaleActive ? (
+														<>
+															<span className="text-xl font-bold text-green-600">
+																{formatPrice(discountedPrice)}
+															</span>
+
+															<span className="text-sm text-gray-500 line-through">
+																{formatPrice(product.price)}
+															</span>
+														</>
+													) : (
+														<>
+															<span className="text-xl font-bold text-green-600">
+																{formatPrice(product.sellingPrice)}
+															</span>
+
+															<span className="text-sm text-gray-500 line-through">
+																{formatPrice(product.price)}
+															</span>
+														</>
+													)}
+												</div>
+
+												{flashSaleActive && (
+													<div className="text-xs text-red-600 font-semibold">
+														{formatPrice(savings)}
+													</div>
+												)}
+											</div>
+
+											{product.ratings?.average > 0 && (
+												<div className="flex items-center space-x-1 mb-3">
+													<div className="text-yellow-500">★</div>
+
+													<span className="text-sm text-gray-600">
+														{product.ratings.average.toFixed(1)}
+													</span>
+
+													<span className="text-xs text-gray-400">
+														({product.ratings.count})
+													</span>
+												</div>
+											)}
+
+											<div className="flex justify-between text-xs text-gray-500">
+												<span>
+													{(product.stock ?? 0) > 0 ? (
+														<span className="text-green-600">✓ In Stock</span>
+													) : (
+														<span className="text-red-600">✗ Out of Stock</span>
+													)}
+												</span>
+											</div>
+										</div>
+									</div>
+								</Link>
+							</div>
+						);
+					})}
+				</div>
+
+				{products.length > 0 && (
+					<div className="text-center mt-12">
+						<Link
+							href="/category"
+							className="inline-flex items-center px-8 py-4 border-2 border-green-500 text-base font-bold rounded-lg text-green-600 hover:bg-green-500 hover:text-white transition-all duration-200 group"
+						>
+							Explore More Food
+							<svg
+								className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M9 5l7 7-7 7"
+								/>
+							</svg>
+						</Link>
+					</div>
+				)}
+			</div>
+		</div>
+	);
+}

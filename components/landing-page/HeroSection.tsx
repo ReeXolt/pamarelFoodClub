@@ -6,7 +6,8 @@ import heroBg from "@/public/assets/hero-bg.jpg";
 import { useInView } from "framer-motion";
 import { StarIcon, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { revealRight, revealUp, routes } from "@/lib/utils";
+import { revealRight, revealUp } from "@/lib/utils";
+import { routes } from "@/utils/routes";
 
 /* ─── Animated counter ─── */
 const AnimatedCounter = ({ target, suffix = "" }: { target: number; suffix?: string }) => {
@@ -116,7 +117,7 @@ export const HeroSection = () => {
 
             <div className="flex flex-wrap gap-4">
               <Link
-                href={routes.shop.market}
+                href={routes.shop.index}
                 className="group inline-flex items-center gap-2 bg-accent text-black px-8 py-4 rounded-full text-sm font-bold hover:shadow-xl hover:shadow-accent/25 hover:-translate-y-1 transition-all duration-300"
               >
                 Shop Now <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

@@ -18,17 +18,16 @@ export const routes = {
 
   // Business Opportunities
   stockist: "/apply-stockist",
-  joinMember: "/join-member",
 
   // =====================
   // SHOPPING ROUTES (Public)
   // =====================
   shop: {
     index: "/shop",
-    market: "/market",
-    product: (id: string) => `/product/${id}`,
-    category: "/category",
-    categoryDetail: (id: string) => `/category/${id}`,
+    // market: "/market",
+    // product: (id: string) => `/product/${id}`,
+    category: "/shop/category",
+    product: (id: string) => `/shop/category/${id}`,
   },
 
   // =====================

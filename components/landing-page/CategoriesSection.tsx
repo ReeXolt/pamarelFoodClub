@@ -3,9 +3,10 @@ import { useInView, motion } from "framer-motion";
 import { useRef } from "react";
 import foodMarket from "@/public/assets/food-market.jpg";
 import gadgetHub from "@/public/assets/gadget-hub.jpg";
-import { revealLeft, revealRight, revealUp, routes } from "@/lib/utils";
+import { revealLeft, revealRight, revealUp } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { routes } from "@/utils/routes";
 
 export const CategoriesSection = () => {
   const ref = useRef(null);
@@ -34,7 +35,7 @@ export const CategoriesSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
           {/* Food – wider */}
           <motion.a
-            href={`${routes.shop.market}#food`}
+            href={`${routes.shop.index}#food`}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
             variants={revealLeft}
@@ -59,7 +60,7 @@ export const CategoriesSection = () => {
 
           {/* Gadgets – narrower */}
           <motion.a
-            href={`${routes.shop.market}#gadgets`}
+            href={`${routes.shop.index}#gadgets`}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
             variants={revealRight}

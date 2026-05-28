@@ -3,41 +3,9 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-interface FlashSale {
-	active: boolean;
-	discountPercentage: number;
-	startDate: string;
-	endDate: string;
-}
-
-interface Ratings {
-	average: number;
-	count: number;
-}
-
-interface Product {
-	_id: string;
-	name: string;
-	description?: string;
-	price: number;
-	sellingPrice: number;
-	stock: number;
-	featured?: boolean;
-	images: string[];
-	flashSale?: FlashSale;
-	ratings?: Ratings;
-	numberSold?: number;
-}
-
-interface ApiResponse {
-	success: boolean;
-	products: Product[];
-}
-
-const formatPrice = (price: number): string => {
-	return price.toLocaleString('en-NG');
-};
+import { Product } from '../allProducts/data';
+import { formatPrice } from '@/lib/utils';
+import { routes } from '@/utils/routes';
 
 export function GadgetEssentails() {
 	const [products, setProducts] = useState<Product[]>([]);
@@ -55,7 +23,7 @@ export function GadgetEssentails() {
 				throw new Error('Failed to fetch products');
 			}
 
-			const data: ApiResponse = await response.json();
+			const data = await response.json();
 
 			if (data.success) {
 				setProducts(data.products);
@@ -68,10 +36,7 @@ export function GadgetEssentails() {
 	};
 
 	const calculateDiscountedPrice = (product: Product): number => {
-		if (
-			product.flashSale?.active &&
-			product.flashSale.discountPercentage > 0
-		) {
+		if (product.flashSale?.active && product.flashSale.discountPercentage > 0) {
 			const discount =
 				product.price * (product.flashSale.discountPercentage / 100);
 
@@ -147,13 +112,12 @@ export function GadgetEssentails() {
 					{products.map((product, index) => {
 						const flashSaleActive = isFlashSaleActive(product);
 
-						const discountedPrice =
-							calculateDiscountedPrice(product);
+						const discountedPrice = calculateDiscountedPrice(product);
 
 						return (
 							<Link
 								key={product._id || index}
-								href={`/product/${product._id}`}
+								href={routes.shop.product(product._id.toString())}
 								className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 block"
 							>
 								{/* Product Image */}
@@ -168,9 +132,7 @@ export function GadgetEssentails() {
 										/>
 									) : (
 										<div className="w-full h-full bg-gray-200 flex items-center justify-center">
-											<span className="text-gray-400">
-												No Image
-											</span>
+											<span className="text-gray-400">No Image</span>
 										</div>
 									)}
 
@@ -178,12 +140,7 @@ export function GadgetEssentails() {
 									{flashSaleActive && (
 										<div className="absolute top-3 left-3">
 											<div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-												⚡{' '}
-												{
-													product.flashSale
-														?.discountPercentage
-												}
-												% OFF
+												⚡ {product.flashSale?.discountPercentage}% OFF
 											</div>
 										</div>
 									)}
@@ -217,75 +174,49 @@ export function GadgetEssentails() {
 											{flashSaleActive ? (
 												<>
 													<span className="text-md font-bold text-yellow-600">
-														₦
-														{formatPrice(
-															discountedPrice
-														)}
+														{formatPrice(discountedPrice)}
 													</span>
 
 													<span className="text-sm text-gray-500 line-through">
-														₦
-														{formatPrice(
-															product.price
-														)}
+														{formatPrice(product.price)}
 													</span>
 												</>
 											) : (
 												<>
 													<span className="text-md font-bold text-green-600">
-														₦
-														{formatPrice(
-															product.sellingPrice
-														)}
+														{formatPrice(product.sellingPrice)}
 													</span>
 
 													<span className="text-sm text-gray-500 line-through">
-														₦
-														{formatPrice(
-															product.price
-														)}
+														{formatPrice(product.price)}
 													</span>
 												</>
 											)}
 										</div>
 
 										{/* Rating */}
-										{product.ratings &&
-											product.ratings.average > 0 && (
-												<div className="flex items-center space-x-1">
-													<div className="text-yellow-500">
-														★
-													</div>
+										{product.ratings && product.ratings.average > 0 && (
+											<div className="flex items-center space-x-1">
+												<div className="text-yellow-500">★</div>
 
-													<span className="text-sm text-gray-600">
-														{product.ratings.average.toFixed(
-															1
-														)}
-													</span>
+												<span className="text-sm text-gray-600">
+													{product.ratings.average.toFixed(1)}
+												</span>
 
-													<span className="text-xs text-gray-400">
-														(
-														{
-															product.ratings
-																.count
-														}
-														)
-													</span>
-												</div>
-											)}
+												<span className="text-xs text-gray-400">
+													({product.ratings.count})
+												</span>
+											</div>
+										)}
 									</div>
 
 									{/* Stock Info */}
 									<div className="flex justify-between text-xs text-gray-500">
 										<span>
 											{product.stock > 0 ? (
-												<span className="text-green-600">
-													✓ In Stock
-												</span>
+												<span className="text-green-600">✓ In Stock</span>
 											) : (
-												<span className="text-red-600">
-													✗ Out of Stock
-												</span>
+												<span className="text-red-600">✗ Out of Stock</span>
 											)}
 										</span>
 									</div>
@@ -298,11 +229,10 @@ export function GadgetEssentails() {
 				{/* View More Button */}
 				<div className="text-center mt-12">
 					<Link
-						href="/category"
+						href="/category?section=gadgets"
 						className="inline-flex items-center px-8 py-3 border-2 border-accent text-base font-bold rounded-lg text-accent hover:bg-accent/60 hover:text-white transition-all duration-200 group"
 					>
 						Explore More Gadgets
-
 						<svg
 							className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
 							fill="none"
