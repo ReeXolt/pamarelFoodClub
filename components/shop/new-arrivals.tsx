@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { routes } from '@/utils/routes';
 
 interface FlashSale {
 	active: boolean;
@@ -133,7 +134,7 @@ export function NewArrivals() {
 						return (
 							<Link
 								key={product._id}
-								href={`/product/${product._id}`}
+								href={routes.shop.product(product._id.toString())}
 								className="group relative flex h-full flex-col rounded-lg border shadow-sm transition-all duration-300 group-hover:shadow-2xl"
 							>
 								<div className="relative h-64 overflow-hidden rounded-t-lg">
@@ -233,7 +234,7 @@ export function NewArrivals() {
 
 				<div className="mt-12 text-center">
 					<Link
-						href="/category"
+						href={routes.shop.category}
 						className="bg-accent hover:bg-accent/50 inline-flex items-center rounded-md border border-transparent px-6 py-3 text-base font-medium text-white transition-colors duration-200"
 					>
 						View All Products

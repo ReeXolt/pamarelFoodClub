@@ -5,15 +5,20 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronRight, FolderOpen } from 'lucide-react';
 import { useInView } from 'framer-motion';
 import Image from 'next/image';
+import { routes } from '@/utils/routes';
 
 // Function to create slug from category name
-const createSlug = (name: string) => {
-	return name
-		.toLowerCase()
-		.trim()
-		.replace(/[^\w\s-]/g, '') // Remove special characters
-		.replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
-		.replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+const createUrl = (
+	basePath: string,
+	params: Record<string, string>,
+) => {
+	const searchParams = new URLSearchParams();
+
+	Object.entries(params).forEach(([key, value]) => {
+		searchParams.append(key, value);
+	});
+
+	return `${basePath}?${searchParams.toString()}`;
 };
 
 type Category = {
@@ -136,7 +141,7 @@ export default function CategorySection() {
 					{categories.map((category) => (
 						<Link
 							key={category._id}
-							href={`/category?cat=${createSlug(category.name)}`}
+							href={createUrl(routes.shop.category, { cat: category.name })}
 							className="group h-full"
 						>
 							<div className="bg-white rounded-xl h-full shadow-sm border border-gray-100 hover:shadow-lg hover:border-yellow-200 transition-all duration-300 overflow-hidden">
