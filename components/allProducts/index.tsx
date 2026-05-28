@@ -9,6 +9,7 @@ import { Header } from './Header';
 import { Toolbar } from './Toolbar';
 import { ProductGrid } from './ProductGrid';
 import type { categoryFilters, Product } from './data';
+import { routes } from '@/utils/routes';
 
 const productsPerPage = 12;
 
@@ -66,7 +67,7 @@ export const AllProducts = () => {
 		if (featured) params.append('featured', 'true');
 
 		const queryString = params.toString();
-		router.push(queryString ? `/category?${queryString}` : '/category');
+		router.push(queryString ? routes.shop.category + `?${queryString}` : routes.shop.category);
 	};
 
 	const toggleCategory = (c: string) => {
